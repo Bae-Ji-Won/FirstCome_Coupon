@@ -31,7 +31,7 @@ public class CouponApiApplication implements CommandLineRunner {
             Coupon coupon = Coupon.builder()
                     .title("네고왕 선착순")
                     .couponType(CouponType.FIRST_COME_FIRST_SERVED)
-                    .totalQuantity(10)
+                    .totalQuantity(500)
                     .issuedQuantity(0)
                     .discountAmount(100000)
                     .minAvailableAmount(110000)
