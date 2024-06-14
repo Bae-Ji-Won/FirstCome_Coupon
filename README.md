@@ -49,13 +49,7 @@
 <br />
 <br />
 
-# ❗ 프로젝트 구현의 목표
-- 정확한 발급 수량 제어(동시성 이슈 처리)
-- 높은 처리량
 
-
-<br />
-<br />
 
 # 📄 프로젝트 구조
 - 기본 구조
@@ -67,11 +61,31 @@
 - Redis 활용하여 동시성 처리 구조
 ![image](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/061c63e3-2a1c-4bec-a981-36aad9eda15d)
 
-
 (1) N명의 유저가 요청을 보냄<br><br>
 (2) API 서버에서는 N개의 요청을 처리<br><br>
 (3) Redis에서 요청을 처리하고 쿠폰 발급 대상을 저장<br><br>
 (4) 쿠폰 발급 처리 기능에서 Redis의 쿠폰 발급 대상을 조회하여 발급 처리<br><br>
+
+- Redis & Queue를 활용한 동시성 처리 구조 (이번에 사용할 구조)
+![image](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/2b58b5c7-c1dd-4639-8587-2e74598ef625)
+
+(1) N명의 유저가 요청을 보냄<br><br>
+(2) API 서버에서는 N개의 요청을 처리<br><br>
+(3) Redis에서 요청을 처리하고 Queue에 발급 대상을 저장<br><br>
+(4) 쿠폰 발급 처리 서버에서는 Queue를 조회하여 발급 처리함.<br><br>
+
+<br />
+<br />
+
+# ❗ 프로젝트 구현의 목표
+- 유저 트래픽과 쿠폰 발급 트랜잭션 분리<br>
+  - Redis를 통한 트래픽 대응<br>
+  - MySQL 트래픽 제어<br><br>
+- 비동기 쿠폰 발급 시스템<br>
+  - Queue를 인터페이스로 발급 요청 / 발급 과정을 분리<br><br>
+- 쿠폰 발급 요청을 처리하는 API 서버 / 쿠폰 발급을 수행하는 발급 서버 분리
+<br />
+<br />
 
 <br/>
 <br/>
