@@ -67,10 +67,12 @@
 - Redis 활용하여 동시성 처리 구조
 ![image](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/061c63e3-2a1c-4bec-a981-36aad9eda15d)
 
-(1) N명의 유저가 요청을 보냄
-(2) API 서버에서는 N개의 요청을 처리
-(3) Redis에서 요청을 처리하고 쿠폰 발급 대상을 저장
-(4) 쿠폰 발급 처리 기능에서 Redis의 쿠폰 발급 대상을 조회하여 발급 처리
+<br>
+
+(1) N명의 유저가 요청을 보냄<br>
+(2) API 서버에서는 N개의 요청을 처리<br>
+(3) Redis에서 요청을 처리하고 쿠폰 발급 대상을 저장<br>
+(4) 쿠폰 발급 처리 기능에서 Redis의 쿠폰 발급 대상을 조회하여 발급 처리<br>
 
 <br/>
 <br/>
