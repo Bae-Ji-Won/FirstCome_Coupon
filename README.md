@@ -17,16 +17,11 @@
   <img alt="Java" src ="https://img.shields.io/badge/Java-007396.svg?&style=for-the-badge&logo=Java&logoColor=white"/>
   <img alt="Spring Boot" src ="https://img.shields.io/badge/Spring Boot-6DB33F.svg?&style=for-the-badge&logo=Spring Boot&logoColor=white"/>
   <img alt="Gradle" src ="https://img.shields.io/badge/Gradle-02303A.svg?&style=for-the-badge&logo=Gradle&logoColor=white"/>
-  <img alt="Spring Security" src ="https://img.shields.io/badge/Spring Security-6DB33F.svg?&style=for-the-badge&logo=Spring Security&logoColor=white"/>
+  <img alt="Redis" src ="https://img.shields.io/badge/Redis-6DB33F.svg?&style=for-the-badge&logo=Redis&logoColor=white"/>
 </div>
 <div>
-  <img alt="Amazon RDS" src="https://img.shields.io/badge/Amazon RDS-527FFF?style=for-the-badge&logo=Amazon RDS&logoColor=white"/>
   <img alt="MySQL" src ="https://img.shields.io/badge/MySQL-4479A1.svg?&style=for-the-badge&logo=MySQL&logoColor=white"/>
   <img alt="Hibernate" src ="https://img.shields.io/badge/Hibernate-59666C.svg?&style=for-the-badge&logo=Hibernate&logoColor=white"/>
-</div>
-<div>
-  <img alt="Amazon AWS" src="https://img.shields.io/badge/Amazon AWS-232F3E?style=for-the-badge&logo=Amazon AWS&logoColor=white"/>
-  <img alt="Amazon EC2" src="https://img.shields.io/badge/Amazon EC2-FF4F8B?style=for-the-badge&logo=Amazon EC2&logoColor=white"/>
 </div>
 
 <br />
@@ -49,12 +44,48 @@
 <br />
 <br />
 
-# ❗ 프로젝트 구현의 목표
-- 정확한 발급 수량 제어(동시성 이슈 처리)
-- 높은 처리량
 
 
+# 📄 프로젝트 구조
+- 기본 구조
+![api 구조](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/cefaffff-0d89-4ce5-b3e6-ad954c1118c8)
+
+- 동시성 처리 구조
+![트래픽 처리](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/4dfe636f-d24b-43b1-b52c-732d12fa4b8c)
+
+- Redis 활용하여 동시성 처리 구조
+![image](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/061c63e3-2a1c-4bec-a981-36aad9eda15d)
+
+(1) N명의 유저가 요청을 보냄<br><br>
+(2) API 서버에서는 N개의 요청을 처리<br><br>
+(3) Redis에서 요청을 처리하고 쿠폰 발급 대상을 저장<br><br>
+(4) 쿠폰 발급 처리 기능에서 Redis의 쿠폰 발급 대상을 조회하여 발급 처리<br><br>
+
+- Redis & Queue를 활용한 동시성 처리 구조 (이번에 사용할 구조)
+![image](https://github.com/Bae-Ji-Won/FirstCome_Coupon/assets/82360230/2b58b5c7-c1dd-4639-8587-2e74598ef625)
+
+(1) N명의 유저가 요청을 보냄<br><br>
+(2) API 서버에서는 N개의 요청을 처리<br><br>
+(3) Redis에서 요청을 처리하고 Queue에 발급 대상을 저장<br><br>
+(4) 쿠폰 발급 처리 서버에서는 Queue를 조회하여 발급 처리함.<br><br>
 
 <br />
+<br />
 
+# ❗ 프로젝트 구현의 목표
+- 유저 트래픽과 쿠폰 발급 트랜잭션 분리<br>
+  - Redis를 통한 트래픽 대응<br>
+  - MySQL 트래픽 제어<br><br>
+- 비동기 쿠폰 발급 시스템<br>
+  - Queue를 인터페이스로 발급 요청 / 발급 과정을 분리<br><br>
+- 쿠폰 발급 요청을 처리하는 API 서버 / 쿠폰 발급을 수행하는 발급 서버 분리
+<br />
+<br />
+
+<br/>
+<br/>
+<br/>
+<br/>
+
+PS. ![네고왕 이벤트 선착순 쿠폰 시스템](https://fastcampus.co.kr/dev_online_traffic_data)
 

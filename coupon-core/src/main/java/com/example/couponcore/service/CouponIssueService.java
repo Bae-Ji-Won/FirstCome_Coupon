@@ -39,6 +39,14 @@ public class CouponIssueService {
         });
     }
 
+    //
+    @Transactional(readOnly = true)
+    public Coupon findCouponWithLock(long couponId){
+        return couponJpaRepository.findCouponWithLock(couponId).orElseThrow(() -> {
+            throw  new CouponissueException(COUPON_ALREADY_EXISTS, "쿠폰 정책이 존재하지 않습니다. %s".formatted(couponId));
+        });
+    }
+
     // 쿠폰 발급 받은 유저 정보 저장
     @Transactional
     public CouponIssue saveCouponIssue(long couponId, long userId){
