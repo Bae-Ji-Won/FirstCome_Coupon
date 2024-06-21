@@ -1,5 +1,6 @@
 package com.example.couponcore.service;
 
+import com.example.couponcore.component.DistributeLockExecutor;
 import com.example.couponcore.exception.CouponissueException;
 import com.example.couponcore.exception.ErrorCode;
 import com.example.couponcore.model.Coupon;
@@ -23,6 +24,7 @@ public class AsyncCouponIssueServiceV1 {
     private final CouponIssueRedisService couponIssueRedisService;
     private final CouponIssueService couponIssueService;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private final DistributeLockExecutor distributeLockExecutor;
 
     /* Redis Sorted Set를 통한 관리
      1. Sorted Set에 요청을 추가
@@ -47,16 +49,19 @@ public class AsyncCouponIssueServiceV1 {
             throw new CouponissueException(INVALID_COUPON_ISSUE_DATE,"발급 가능한 일자가 아닙니다. couponId:%s, issueStart:%s,issueEnd:%s".formatted(couponId,coupon.getDateIssueStart(),coupon.getDateIssueEnd()));
         }
 
-        // 쿠폰 총 개수 조회
-        if(!couponIssueRedisService.availableTotalIssueQuantity(coupon.getTotalQuantity(),couponId)){
-            throw new CouponissueException(INVALID_COUPON_ISSUE_QUANTITY,"발급 가능한 수량이 없습니다. coupon_Id:%s".formatted(couponId));
-        }
-        
-        // 쿠폰을 받은 유저 정보 조회
-        if(!couponIssueRedisService.availableUserIssueQuantity(coupon.getTotalQuantity(),userId)){
-            throw new CouponissueException(DUPLICATE_COUPON_ISSUE,"이미 발급 받은 쿠폰입니다. coupon_Id:%s".formatted(couponId));
-        }
-        issueRequest(couponId,userId);
+        // 쿠폰 개수에 관한 조회부분은 동시성 처리를 해줘야함
+        distributeLockExecutor.execute("lock_%s".formatted(couponId),3000,3000,() -> {
+            // 쿠폰 총 개수 조회
+            if(!couponIssueRedisService.availableTotalIssueQuantity(coupon.getTotalQuantity(),couponId)){
+                throw new CouponissueException(INVALID_COUPON_ISSUE_QUANTITY,"발급 가능한 수량이 없습니다. coupon_Id:%s".formatted(couponId));
+            }
+
+            // 쿠폰을 받은 유저 정보 조회
+            if(!couponIssueRedisService.availableUserIssueQuantity(coupon.getTotalQuantity(),userId)){
+                throw new CouponissueException(DUPLICATE_COUPON_ISSUE,"이미 발급 받은 쿠폰입니다. coupon_Id:%s".formatted(couponId));
+            }
+            issueRequest(couponId,userId);
+        });
     }
 
     /* Redis에 데이터를 저장하는 구조
