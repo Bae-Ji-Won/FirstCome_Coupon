@@ -42,5 +42,9 @@ class AsyncCouponIssueServiceV1Test extends TestConfig {
         // then
         Assertions.assertEquals(exception.getErrorCode(), COUPON_ALREADY_EXISTS);
     }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/main
 }
